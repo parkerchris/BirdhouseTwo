@@ -2,10 +2,21 @@ import Head from 'next/head'
 import Image from 'next/image'
 import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
+import { getSession, signIn, signOut, useSession } from "next-auth/react"
+import type { NextPage, NextPageContext } from "next"
 
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
+
+
+  //session data
+  const { data } = useSession();
+  console.log("here is data", data)
+
+
+
+
   return (
     <>
       <Head>
@@ -57,6 +68,18 @@ export default function Home() {
               priority
             />
           </div>
+        </div>
+        {data?.user ? (
+          <>
+            <button onClick={() => signOut()}>Sign Out</button>
+            <h6>{data?.user?.name}</h6>
+          </>
+         ) : (
+            <button onClick={() => signIn('google')}>Sign In</button>
+         )
+        }
+        <div>
+
         </div>
 
         <div className={styles.grid}>
@@ -120,4 +143,15 @@ export default function Home() {
       </main>
     </>
   )
+}
+
+export async function getServerSideProps(context: NextPageContext) {
+  const session = await getSession(context)
+
+  return {
+    props: {
+      session
+    }
+  }
+
 }
