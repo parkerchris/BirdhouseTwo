@@ -4,6 +4,8 @@ import { Inter } from '@next/font/google'
 import styles from '../styles/Home.module.css'
 import { getSession, signIn, signOut, useSession } from "next-auth/react"
 import type { NextPage, NextPageContext } from "next"
+import Auth from "../components/Auth"
+import Application from '../components/Application'
 
 const inter = Inter({ subsets: ['latin'] })
 
@@ -11,10 +13,10 @@ export default function Home() {
 
 
   //session data
-  const { data } = useSession();
-  console.log("here is data", data)
+  const { data: session } = useSession();
+  console.log("here is data", session)
 
-
+  const reloadSession = () => {};
 
 
   return (
@@ -28,8 +30,8 @@ export default function Home() {
       <main className={styles.main}>
         <div className={styles.description}>
           <p>
-            Get started by editing&nbsp;
-            <code className={styles.code}>pages/index.tsx</code>
+            Get started by signing in&nbsp;
+            <code className={styles.code}>look below</code>
           </p>
           <div>
             <a
@@ -69,15 +71,16 @@ export default function Home() {
             />
           </div>
         </div>
-        {data?.user ? (
+        {session?.user ? (
           <>
             <button onClick={() => signOut()}>Sign Out</button>
-            <h6>{data?.user?.name}</h6>
+            <h6>{session?.user?.name}</h6>
           </>
          ) : (
             <button onClick={() => signIn('google')}>Sign In</button>
          )
         }
+        <div>{session?.user ? <Application/> : <Auth session={session} reloadSession={reloadSession}/>}</div>
         <div>
 
         </div>

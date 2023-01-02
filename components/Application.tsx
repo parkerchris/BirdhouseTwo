@@ -1,5 +1,9 @@
+import PropertyCard from "./reusable/PropertyCard"
+
 export default function Application() {
     return (
-        <div></div>
+        <div>
+            <PropertyCard></PropertyCard>
+        </div>
     )
 }
