@@ -7,6 +7,11 @@ import type { NextPage, NextPageContext } from "next"
 import Auth from "../components/Auth"
 import Application from '../components/Application'
 
+import { useState } from 'react'
+import { useMutation } from '@apollo/client'
+import BookOpperations from '../graphql/operations/books'
+
+
 const inter = Inter({ subsets: ['latin'] })
 
 export default function Home() {
@@ -18,6 +23,24 @@ export default function Home() {
 
   const reloadSession = () => {};
 
+
+  //to be DELETED*************************************************************************************************************************
+  const [ bookToBeAdded, setBookToBeAdded ] = useState('')
+
+  const [ createBookAdded, {data, loading, error} ] = useMutation(BookOpperations.Mutations.CREATE_BOOK)
+
+  console.log('HERE IS DATA', data, loading, error)
+
+  const onSubmit = async () => {
+    try {
+      await createBookAdded( {variables: {title: bookToBeAdded}} )
+    } catch(error) {
+      console.log("onsubmit error", error)
+    }
+  }
+
+
+  //above is to be DELETED******************************************************************************************************************
 
   return (
     <>
@@ -75,6 +98,12 @@ export default function Home() {
           <>
             <button onClick={() => signOut()}>Sign Out</button>
             <h6>{session?.user?.name}</h6>
+            <input 
+                    placeholder="enter a book" 
+                    value={bookToBeAdded} 
+                    onChange={(event) => setBookToBeAdded(event.target.value)}/>
+                <button onClick={onSubmit}>Save</button>
+            <input />
           </>
          ) : (
             <button onClick={() => signIn('google')}>Sign In</button>
